@@ -174,14 +174,17 @@ BOOL _isServerListening;
 
 -(Platform)platform
 {
-    if ([self.appPath hasSuffix:@".app"])
+    if (self.useAppPath)
     {
-        [self setPlatform:Platform_iOS];
-    }
-    if ([self.appPath hasSuffix:@".apk"])
-    {
-        [self setPlatform:Platform_Android];
-        [self refreshAvailableActivities];
+        if ([self.appPath hasSuffix:@".app"])
+        {
+            [self setPlatform:Platform_iOS];
+        }
+        if ([self.appPath hasSuffix:@".apk"])
+        {
+            [self setPlatform:Platform_Android];
+            [self refreshAvailableActivities];
+        }
     }
     return [_defaults integerForKey:APPIUM_PLIST_TAB_STATE] == APPIUM_PLIST_TAB_STATE_ANDROID ? Platform_Android : Platform_iOS;
 }
@@ -407,9 +410,9 @@ BOOL _isServerListening;
     {
 		nodeCommandString = [nodeCommandString stringByAppendingString:@" --no-reset"];
     }
-    if (!self.overrideExistingSessions)
+    if (self.overrideExistingSessions)
     {
-        nodeCommandString = [nodeCommandString stringByAppendingString:@" --no-session-override"];
+        nodeCommandString = [nodeCommandString stringByAppendingString:@" --session-override"];
     }
     if (self.useSeleniumGridConfigFile)
     {
