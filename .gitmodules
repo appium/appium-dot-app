@@ -1,6 +1,6 @@
 [submodule "submodules/selenium-objective-c"]
 	path = submodules/selenium-objective-c
-	url = git://github.com/appium/selenium-objective-c
-[submodule "submodules/appium"]
-	path = submodules/appium
-	url = git://github.com/appium/appium
+	url = https://github.com/appium/selenium-objective-c
+[submodule "submodules/socket.io-objc"]
+	path = submodules/socket.io-objc
+	url = https://github.com/pkyeck/socket.IO-objc
