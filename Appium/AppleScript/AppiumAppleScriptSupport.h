@@ -54,7 +54,6 @@
 @property NSString *s_SeleniumGridConfigFile;
 @property NSNumber *s_Port;
 @property NSNumber *s_PrelaunchApp;
-@property NSNumber *s_ResetApplicationState;
 @property NSString *s_UDID;
 @property NSNumber *s_UseAndroidActivity;
 @property NSNumber *s_UseAndroidBrowser;

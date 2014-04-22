@@ -7,21 +7,35 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "AppiumMonitorWindowPopOverViewController.h"
+#import "AppiumMonitorWindowPopOverButton.h"
 #import "AppiumInspectorWindowController.h"
 #import "AppiumMenuBarManager.h"
 #import "AppiumModel.h"
 #import "NodeInstance.h"
 #import "SocketIO.h"
 
+@class AppiumMonitorWindowPopOverViewController;
 @class AppiumInspectorWindowController;
 @class AppiumMenuBarManager;
 @class AppiumModel;
 @class NodeInstance;
 
 @interface AppiumMonitorWindowController : NSWindowController<NSWindowDelegate> {
-    @private
-    AppiumMenuBarManager *_menuBarManager;
+    
+	@private
+    
+	AppiumMenuBarManager *_menuBarManager;
     AppiumInspectorWindowController *_inspectorWindow;
+	
+	IBOutlet NSView *buttonBarView;
+	IBOutlet AppiumMonitorWindowPopOverButton *androidPrefsButton;
+	IBOutlet AppiumMonitorWindowPopOverButton *iOSPrefsButton;
+	IBOutlet AppiumMonitorWindowPopOverViewController *androidPrefsWindowController;
+	IBOutlet AppiumMonitorWindowPopOverViewController *developerPrefsWindowController;
+	IBOutlet AppiumMonitorWindowPopOverViewController *generalPrefsWindowController;
+	IBOutlet AppiumMonitorWindowPopOverViewController *iosPrefsWindowController;
+	IBOutlet AppiumMonitorWindowPopOverViewController *robotPrefsWindowController;
 }
 
 @property (unsafe_unretained) IBOutlet NSTextView *logTextView;
@@ -32,5 +46,7 @@
 -(IBAction) launchButtonClicked:(id)sender;
 -(IBAction) displayInspector:(id)sender;
 -(IBAction) doctorButtonClicked:(id)sender;
+
+-(void) closeAllPopovers;
 
 @end

@@ -35,6 +35,7 @@
 -(void) windowDidLoad
 {
     [super windowDidLoad];
+	
 	_menuBarManager = [AppiumMenuBarManager new];
 	[[self model] addObserver:_menuBarManager forKeyPath:@"isServerRunning" options:NSKeyValueObservingOptionNew context:NULL];
 }
@@ -114,7 +115,7 @@
 
 -(IBAction)chooseFile:(id)sender
 {
-	NSString *selectedApp = [self.model appPath];
+	NSString *selectedApp = [self.model.iOS appPath];
 
     NSOpenPanel* openDlg = [NSOpenPanel openPanel];
 	[openDlg setShowsHiddenFiles:YES];
@@ -134,7 +135,7 @@
     if ([openDlg runModal] == NSOKButton)
     {
 		selectedApp = [[[openDlg URLs] objectAtIndex:0] path];
-		[self.model setAppPath:selectedApp];
+		[self.model.iOS setAppPath:selectedApp];
     }
 }
 
@@ -146,6 +147,41 @@
 -(IBAction)displayInspector:(id)sender
 {
 	[(AppiumAppDelegate*)[[NSApplication sharedApplication] delegate] displayInspector:nil];
+}
+
+-(IBAction)chooseXcodePath:(id)sender
+{
+	NSString *selectedApp = self.model.iOS.xcodePath;
+	
+    NSOpenPanel* openDlg = [NSOpenPanel openPanel];
+	[openDlg setShowsHiddenFiles:YES];
+	[openDlg setAllowedFileTypes:[NSArray arrayWithObjects:@"app", nil]];
+    [openDlg setCanChooseFiles:YES];
+    [openDlg setCanChooseDirectories:NO];
+    [openDlg setPrompt:@"Select Xcode Application"];
+	if (selectedApp == nil || [selectedApp isEqualToString:@"/"])
+	{
+	    [openDlg setDirectoryURL:[NSURL fileURLWithPath:NSHomeDirectory()]];
+	}
+	else
+	{
+		[openDlg setDirectoryURL:[NSURL fileURLWithPath:[selectedApp stringByDeletingLastPathComponent]]];
+	}
+	
+    if ([openDlg runModal] == NSOKButton)
+    {
+		selectedApp = [[[openDlg URLs] objectAtIndex:0] path];
+		[self.model.iOS setXcodePath:selectedApp];
+    }
+}
+
+-(void) closeAllPopovers
+{
+	for(NSView* button in [buttonBarView subviews]) {
+		if ([button isKindOfClass:[AppiumMonitorWindowPopOverButton class]]) {
+			[((AppiumMonitorWindowPopOverButton*)button).popoverController close];
+		}
+	}
 }
 
 @end
