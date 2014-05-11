@@ -1,2 +1,4 @@
 language: objective-c
 before script: cd ./obj-c/Appium
+xcode_project: Appium.xcodeproj
+xcode_scheme: Appium
