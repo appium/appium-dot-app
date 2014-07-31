@@ -198,7 +198,7 @@
 	}
 	else
 	{
-		self.screenshotScalar = self.image.size.height > 0 ? self.bounds.size.height / self.image.size.height : .0f;
+		self.screenshotScalar = self.image.size.width > 0 ? self.bounds.size.width / self.image.size.width : .0f;
 		self.maxWidth = self.image.size.width * self.screenshotScalar;
 		self.xBorder = (self.bounds.size.width - self.maxWidth) / 2.0f;
 	}
