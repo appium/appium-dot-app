@@ -7,7 +7,7 @@ about the project.
 
 To install:
 
-1. Download the [latest version](https://bitbucket.org/appium/appium.app/downloads/appium.dmg) from [Appium.io](http://appium.io/).
+1. Download the [latest version](https://bitbucket.org/appium/appium.app/downloads/appium-1.4.0.dmg) from [Appium.io](http://appium.io/).
 2. Mount the disk image.
 3. Drag Appium.app to your Applications folder.
 
