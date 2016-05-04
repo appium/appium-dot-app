@@ -38,6 +38,7 @@
 -(NSString*) preCodeBoilerplateAndroid
 {
 	NSString *code = [NSString stringWithFormat:@"import io.appium.java_client.AppiumDriver;\n\
+import io.appium.java_client.MobileBy;\n\
 import org.openqa.selenium.remote.DesiredCapabilities;\n\
 import java.net.URL;\n\
 \n\
@@ -47,30 +48,30 @@ public class {scriptName} {\n\
 \t\tcapabilities.setCapability(\"appium-version\", \"1.0\");\n\
 \t\tcapabilities.setCapability(\"platformName\", \"%@\");\n\
 \t\tcapabilities.setCapability(\"platformVersion\", \"%@\");\n", self.model.android.platformName, self.model.android.platformVersionNumber];
-	
+
 	if ([self.model.android.deviceName length] > 0)
 	{
 		code = [code stringByAppendingFormat:@"\t\tcapabilities.setCapability(\"deviceName\", \"%@\");\n", self.model.android.deviceName];
 	}
-	
+
 	if ([self.model.android.appPath length] > 0)
 	{
 		code = [code stringByAppendingFormat:@"\t\tcapabilities.setCapability(\"app\", \"%@\");\n", self.model.android.appPath];
 	}
-	
+
 	if ([self.model.android.package length] > 0)
 	{
 		code = [code stringByAppendingFormat:@"\t\tcapabilities.setCapability(\"appPackage\", \"%@\");\n", self.model.android.package];
 	}
-	
+
 	if ([self.model.android.activity length] > 0)
 	{
 		code = [code stringByAppendingFormat:@"\t\tcapabilities.setCapability(\"appActivity\", \"%@\");\n", self.model.android.activity];
 	}
-	
+
 	code = [code stringByAppendingFormat:@"\t\twd = new AppiumDriver(new URL(\"http://%@:%@/wd/hub\"), capabilities);\n\
 \t\twd.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);\n", self.model.general.serverAddress, self.model.general.serverPort];
-	
+
 	return code;
 }
 
@@ -86,20 +87,20 @@ public class {scriptName} {\n\
 \t\tcapabilities.setCapability(\"appium-version\", \"1.0\");\n\
 \t\tcapabilities.setCapability(\"platformName\", \"iOS\");\n\
 \t\tcapabilities.setCapability(\"platformVersion\", \"%@\");\n", self.model.iOS.platformVersion];
-	
+
 	if ([self.model.iOS.deviceName length] > 0)
 	{
 		code = [code stringByAppendingFormat:@"\t\tcapabilities.setCapability(\"deviceName\", \"%@\");\n", self.model.iOS.deviceName];
 	}
-	
+
 	if ([self.model.iOS.appPath length] > 0)
 	{
 		code = [code stringByAppendingFormat:@"\t\tcapabilities.setCapability(\"app\", \"%@\");\n", self.model.iOS.appPath];
 	}
-	
+
 	code = [code stringByAppendingFormat:@"\t\twd = new AppiumDriver(new URL(\"http://%@:%@/wd/hub\"), capabilities);\n\
 \t\twd.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);\n", self.model.general.serverAddress, self.model.general.serverPort];
-	
+
 	return code;
 }
 
@@ -200,11 +201,11 @@ put(\"duration\", %@); \
 -(NSString*) locatorString:(AppiumCodeMakerLocator*)locator
 {
 	AppiumCodeMakerLocator *newLocator = [self.codeMaker.useXPathOnly boolValue] ? [[AppiumCodeMakerLocator alloc] initWithLocatorType:APPIUM_CODE_MAKER_LOCATOR_TYPE_XPATH locatorString:locator.xPath xPath:locator.xPath] : [locator copy];
-	
+
 	switch(newLocator.locatorType)
 	{
 		case APPIUM_CODE_MAKER_LOCATOR_TYPE_NAME:
-			return [NSString stringWithFormat:@"wd.findElement(By.name(\"%@\"))", [self escapeString:newLocator.locatorString]];
+			return [NSString stringWithFormat:@"wd.findElement(MobileBy.AccessibilityId(\"%@\"))", [self escapeString:newLocator.locatorString]];
 		case APPIUM_CODE_MAKER_LOCATOR_TYPE_XPATH:
 			return [NSString stringWithFormat:@"wd.findElement(By.xpath(\"%@\"))", [self escapeString:newLocator.locatorString]];
 		default: return nil;
