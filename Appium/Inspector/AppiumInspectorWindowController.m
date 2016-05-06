@@ -22,9 +22,9 @@
     if (self)
 	{
         AppiumModel *model = [(AppiumAppDelegate*)[[NSApplication sharedApplication] delegate] model];
-		
+
         self.driver = [[SERemoteWebDriver alloc] initWithServerAddress:model.general.serverAddress port:[model.general.serverPort integerValue]];
-		
+
 		if (self.driver == nil)
 		{
 			return [self closeWithError:@"Could not connect to Appium Server"];
@@ -53,6 +53,10 @@
             [capabilities addCapabilityForKey:@"automationName" andValue:(model.isAndroid ? model.android.automationName : @"Appium")];
             [capabilities addCapabilityForKey:@"platformName" andValue:(model.isAndroid ? model.android.platformName : @"iOS")];
 			[capabilities addCapabilityForKey:@"platformVersion" andValue:model.isAndroid ? model.android.platformVersionNumber : model.iOS.platformVersion];
+			[capabilities addCapabilityForKey:@"newCommandTimeout" andValue:@"999999"];
+			if(model.general.useCommandTimeout){
+				[capabilities addCapabilityForKey:@"newCommandTimeout" andValue:model.general.commandTimeout];
+			}
 			if ((model.isAndroid && model.android.useDeviceName) || (model.isIOS && !model.iOS.useDefaultDevice)) {
 				[capabilities addCapabilityForKey:@"deviceName" andValue:model.isAndroid ? model.android.deviceName : model.iOS.deviceName];
 			}
@@ -90,20 +94,20 @@
         // detect the current platform (if using a remote server)
 		if (model.general.useRemoteServer)
 		{
-			if ([[self.driver.session.capabilities.platform lowercaseString] isEqualToString:@"ios"])
+			if ([[self.driver.session.capabilities.platformName lowercaseString] isEqualToString:@"ios"])
 			{
 				[model setPlatform:AppiumiOSPlatform];
 			}
-			else if ([[self.driver.session.capabilities.platform lowercaseString] isEqualToString:@"android"])
+			else if ([[self.driver.session.capabilities.platformName lowercaseString] isEqualToString:@"android"])
 			{
 				[model setPlatform:AppiumAndroidPlatform];
 			}
-			else if ([[self.driver.session.capabilities.platform lowercaseString] isEqualToString:@"selendroid"])
+			else if ([[self.driver.session.capabilities.platformName lowercaseString] isEqualToString:@"selendroid"])
 			{
 				[model setPlatform:AppiumAndroidPlatform];
 			}
 		}
-		
+
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowDidResize:) name:NSWindowDidResizeNotification object:window];
     }
 
@@ -113,7 +117,7 @@
 -(void) windowDidLoad
 {
     [super windowDidLoad];
-    
+
 	if ([self.recordButton respondsToSelector:@selector(setLayerUsesCoreImageFilters:)])
 		// fix crash for pulse animation on record button
 		[self.recordButton setLayerUsesCoreImageFilters:YES];
@@ -125,7 +129,7 @@
 	{
 		[self.selectedElementHighlightView setHidden:YES];
 	}
-	
+
 	// Hide selected points, as when the window resizes, they will likely be out of place
 	self.screenshotImageView.beginPoint = nil;
 	self.screenshotImageView.endPoint   = nil;
@@ -154,7 +158,7 @@
 }
 
 -(IBAction)locatorSearchButtonClicked:(id)sender {
-	
+
 	[self.findElementButton setEnabled:NO];
 	@try {
 		SEBy *locator = nil;
@@ -173,7 +177,7 @@
 		} else if ([self.inspector.selectedLocatorStrategy isEqualToString:@"xpath"]) {
 			locator = [SEBy xPath:self.inspector.suppliedLocator];
 		}
-		
+
 		NSMutableArray *elements = [NSMutableArray new];
 		SEWebElement *element = nil;
 		NSRect rect;
@@ -187,7 +191,7 @@
 			} else {
 				[elements addObjectsFromArray:[self.driver findElementsBy:locator]];
 			}
-			
+
 			if ([elements count] == 1) {
 				element = (SEWebElement*)[elements objectAtIndex:0];
 				if (element.opaqueId != nil) {
@@ -198,7 +202,7 @@
 				}
 			}
 		}
-		
+
 		if (element == nil || element.opaqueId == nil) {
 			NSAlert *alert = [NSAlert new];
 			if (elements.count > 1) {
@@ -234,7 +238,7 @@
 		[alert runModal];
 		[self close];
 	});
-	
+
 	return nil;
 }
 
@@ -271,14 +275,14 @@
 	{
 		self.bottomDrawer.contentSize = CGSizeMake(self.window.frame.size.width, self.bottomDrawer.contentSize.height);
 		[self.bottomDrawer openOnEdge:NSMinYEdge];
-		
+
 		CIFilter *filter = [CIFilter filterWithName:@"CIFalseColor"];
 		[filter setDefaults];
 		[filter setValue:[CIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0] forKey:@"inputColor0"];
 		[filter setValue:[CIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:1.0] forKey:@"inputColor1"];
 		[filter setName:@"pulseFilter"];
 		[self.recordButton.layer setFilters:[NSArray arrayWithObject:filter]];
-		
+
 		CABasicAnimation* pulseAnimation1 = [CABasicAnimation animation];
 		pulseAnimation1.keyPath = @"filters.pulseFilter.inputColor1";
 		pulseAnimation1.fromValue = [CIColor colorWithRed:0.8 green:0.0 blue:0.0 alpha:0.9];
@@ -286,7 +290,7 @@
 		pulseAnimation1.duration = 1.5;
 		pulseAnimation1.repeatCount = HUGE_VALF;
 		pulseAnimation1.autoreverses = YES;
-		
+
 		[self.recordButton.layer addAnimation:pulseAnimation1 forKey:@"pulseAnimation1"];
 		NSShadow * shadow = [NSShadow new];
 		[shadow setShadowColor:[[NSColor blackColor] colorWithAlphaComponent:0.95f]];

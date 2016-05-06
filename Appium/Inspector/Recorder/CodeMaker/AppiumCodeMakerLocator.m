@@ -60,7 +60,7 @@
     switch(self.locatorType)
     {
         case APPIUM_CODE_MAKER_LOCATOR_TYPE_NAME:
-            return [SEBy name:self.locatorString];
+            return [SEBy accessibilityId:self.locatorString];
         case APPIUM_CODE_MAKER_LOCATOR_TYPE_XPATH:
             return [SEBy xPath:self.xPath];
         default:
