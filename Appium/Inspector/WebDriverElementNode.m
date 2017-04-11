@@ -35,7 +35,7 @@
         _showInvisible = showInvisible;
 		[self setParent:parent];
 
-		if ([_jsonDict.allKeys containsObject:@"content-desc"])
+		if ([_jsonDict.allKeys containsObject:@"content-desc"] && [_jsonDict.allKeys containsObject:@"bounds"])
 		{
 			// Android Node
 			[self setPlatform:AppiumAndroidPlatform];
