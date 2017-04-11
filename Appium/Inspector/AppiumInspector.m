@@ -285,7 +285,7 @@ NSString *const AppiumInspectoriOSUIAWindow = @"UIAWindow";
 -(AppiumCodeMakerLocator*) locatorForSelectedNode
 {
 	NSString *xPath = [self xPathForSelectedNode];
-	if ([self selectedNodeNameIsUniqueInTree:_rootNode])
+	if (!self.model.isIOS && [self selectedNodeNameIsUniqueInTree:_rootNode])
 	{
 		return [[AppiumCodeMakerLocator alloc] initWithLocatorType:APPIUM_CODE_MAKER_LOCATOR_TYPE_NAME locatorString:_selection.name xPath:xPath];
 	}
